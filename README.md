@@ -27,6 +27,7 @@
     pip install -r requirements.txt
     ```
 4. список файлов
+- data - директория с файлами данных
 - data/titanic.zip - архив исходных табличных данных соревнований (3 файла)
 - data/gender_submission.csv - один из исходных файлов данных
 - data/test.csv - один из исходных файлов данных
