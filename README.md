@@ -32,3 +32,6 @@
 - data/gender_submission.csv - один из исходных файлов данных
 - data/test.csv - один из исходных файлов данных
 - data/train.csv - один из исходных файлов данных
+- notebooks - директория с юпитер-ноутбуками
+- notebooks/titanic_universal_eda.ipynb - универсальный еда ноутбук
+- notebooks/titanic_eda.ipynb - еда ноутбук
