@@ -33,5 +33,7 @@
 - data/test.csv - один из исходных файлов данных
 - data/train.csv - один из исходных файлов данных
 - notebooks - директория с юпитер-ноутбуками
-- notebooks/titanic_universal_eda.ipynb - универсальный еда ноутбук
-- notebooks/titanic_eda.ipynb - еда ноутбук
+- notebooks/eda_and_analysis - директория с ноутбуками еда и анализом данных
+- notebooks/eda_and_analysis/titanic_universal_eda.ipynb - универсальный еда ноутбук
+- notebooks/eda_and_analysis/titanic_eda.ipynb - еда ноутбук
+- notebooks/solutions - директория с ноутбуками решениями
