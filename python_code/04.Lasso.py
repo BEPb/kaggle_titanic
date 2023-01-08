@@ -1,6 +1,6 @@
 """
-Python 3.10 Ridge Classifier program with pre-processing of kaggle titanic competition data
-File name: Ridge_Classifier.py
+Python 3.10 Lasso program with pre-processing of kaggle titanic competition data
+File name: Lasso.py
 
 Version: 0.1
 Author: Andrej Marinchenko
@@ -9,7 +9,7 @@ Date: 2023-01-08
 
 import pandas as pd
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.linear_model import RidgeClassifier
+from sklearn import linear_model
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 
@@ -53,7 +53,7 @@ X_test = test_df[relevant_features]
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=33)
 
 ############################################## Train the model #########################################################
-model = RidgeClassifier()
+model = linear_model.Lasso()
 model.fit(X_train, y_train)
 
 # Evaluate the logistic regression classifier
@@ -65,10 +65,11 @@ y_pred = model.predict(X_test)
 
 # Save the predictions to a CSV file
 output = pd.DataFrame({'PassengerId': test_df['PassengerId'], 'Survived': y_pred})
-output.to_csv('03.submission-ridge-0.76555.csv', index=False)
+output['Survived'] = output['Survived'].astype(int)
+output.to_csv('04.submission-lasso-0.622.csv', index=False)
 
 # print(output)
 print('Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
-print('Real score on submission: 0.76555')
+print('Real score on submission: 0.622')
 
 

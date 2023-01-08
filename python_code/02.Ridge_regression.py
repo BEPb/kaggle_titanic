@@ -52,7 +52,7 @@ X_test = test_df[relevant_features]
 # Split the data into training and validation sets
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=33)
 
-
+############################################## Train the model #########################################################
 model = linear_model.Ridge()
 model.fit(X_train, y_train)
 
