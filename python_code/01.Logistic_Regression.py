@@ -1,5 +1,5 @@
 """
-Python 3.10 logistic regression program with pre-processing of cagle titanic competition data
+Python 3.10 logistic regression program with pre-processing of kaggle titanic competition data
 File name: Logistic_Regression.py
 
 Version: 0.1

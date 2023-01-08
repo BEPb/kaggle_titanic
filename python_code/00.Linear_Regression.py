@@ -1,5 +1,5 @@
 """
-Python 3.10 linear regression program with pre-processing of cagle titanic competition data
+Python 3.10 linear regression program with pre-processing of kagle titanic competition data
 File name: Linear_Regression.py
 
 Version: 0.1
