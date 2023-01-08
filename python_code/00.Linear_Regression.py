@@ -9,8 +9,7 @@ Date: 2023-01-08
 
 import pandas as pd
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn import datasets, linear_model
-from sklearn.ensemble import VotingClassifier
+from sklearn import linear_model
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 
@@ -59,7 +58,7 @@ regr = linear_model.LinearRegression()
 regr.fit(X_train, y_train)
 
 # Evaluate the logistic regression classifier
-scores = cross_val_score(regr, X_train, y_train, cv=5)
+scores = cross_val_score(regr, X_val, y_val, cv=5)
 print("Accuracy of linear regression classifier: ", scores.mean())
 
 # Make predictions on the test set
