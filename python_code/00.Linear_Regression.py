@@ -1,6 +1,6 @@
 """
-Python 3.10 logistic regression program with pre-processing of cagle titanic competition data
-File name: Logistic_Regression.py
+Python 3.10 linear regression program with pre-processing of cagle titanic competition data
+File name: Linear_Regression.py
 
 Version: 0.1
 Author: Andrej Marinchenko
@@ -8,9 +8,8 @@ Date: 2023-01-08
 """
 
 import pandas as pd
-from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
-from sklearn.metrics import accuracy_score
-from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn import datasets, linear_model
 from sklearn.ensemble import VotingClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
@@ -56,41 +55,23 @@ X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.
 
 
 ############################################## Train the model #########################################################
-log_reg = LogisticRegression()
-model = VotingClassifier(estimators=[('lr', log_reg)])
-model.fit(X_train, y_train)
-
-param_grid = {'C': [0.001, 0.01, 0.1, 1, 10]}
-grid_search = GridSearchCV(log_reg, param_grid, cv=5)
-grid_search.fit(X_train, y_train)
-best_log_reg = grid_search.best_estimator_
-print("Best parameters for logistic regression: ", grid_search.best_params_)
-
-model = VotingClassifier(estimators=[('lr', best_log_reg)])
-model.fit(X_train, y_train)
-
-# Evaluate the fine-tuned model
-y_pred = model.predict(X_val)
-accuracy = accuracy_score(y_val, y_pred)
-print("Accuracy: ", accuracy)
+regr = linear_model.LinearRegression()
+regr.fit(X_train, y_train)
 
 # Evaluate the logistic regression classifier
-scores = cross_val_score(log_reg, X_train, y_train, cv=5)
-print("Accuracy of logistic regression classifier: ", scores.mean())
+scores = cross_val_score(regr, X_train, y_train, cv=5)
+print("Accuracy of linear regression classifier: ", scores.mean())
 
 # Make predictions on the test set
-y_pred = model.predict(X_test)
+y_pred = regr.predict(X_test)
 
 # Save the predictions to a CSV file
 output = pd.DataFrame({'PassengerId': test_df['PassengerId'], 'Survived': y_pred})
-output.to_csv('00.submission-lr-0.76555.csv', index=False)
+output['Survived']= output['Survived'].astype(int)
+output.to_csv('00.submission-linr-0.65311.csv', index=False)
 
+# print(output)
 print('Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
-print('Real score on submission: 0.76555')
-# print(result_df['Survived'].value_counts())
-# result_df['percent'] = result_df['Survived'] == output['Survived']
-# print('percent: \n', (result_df['percent'].value_counts()))
-# print(result_df)
-# print(result_df['percent'].value_counts())
-# print(result_df['Survived'].isin(output['Survived']).value_counts())
+print('Real score on submission: 0.65311')
+
 
