@@ -60,7 +60,7 @@ log_reg = LogisticRegression()
 model = VotingClassifier(estimators=[('lr', log_reg)])
 model.fit(X_train, y_train)
 
-param_grid = {'C': [0.1, 1, 10]}
+param_grid = {'C': [0.001, 0.01, 0.1, 1, 10]}
 grid_search = GridSearchCV(log_reg, param_grid, cv=5)
 grid_search.fit(X_train, y_train)
 best_log_reg = grid_search.best_estimator_
@@ -83,10 +83,10 @@ y_pred = model.predict(X_test)
 
 # Save the predictions to a CSV file
 output = pd.DataFrame({'PassengerId': test_df['PassengerId'], 'Survived': y_pred})
-output.to_csv('00.submission-lr-0.76076.csv', index=False)
+output.to_csv('00.submission-lr-0.76555.csv', index=False)
 
 print('Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
-print('Real score on submission: 0,76076')
+print('Real score on submission: 0.76555')
 # print(result_df['Survived'].value_counts())
 # result_df['percent'] = result_df['Survived'] == output['Survived']
 # print('percent: \n', (result_df['percent'].value_counts()))
