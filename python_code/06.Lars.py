@@ -66,7 +66,7 @@ y_pred = model.predict(X_test)
 # Save the predictions to a CSV file
 output = pd.DataFrame({'PassengerId': test_df['PassengerId'], 'Survived': y_pred})
 output['Survived'] = output['Survived'].astype(int)
-output.to_csv('06.submission-elastic-0.65311.csv', index=False)
+output.to_csv('06.submission-lars-0.65311.csv', index=False)
 
 print(output)
 print('Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
