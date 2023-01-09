@@ -1,6 +1,6 @@
 """
-Python 3.10 Orthogonal Matching PursuitCV program with pre-processing of kaggle titanic competition data
-File name: Orthogonal_Matching_PursuitCV.py
+Python 3.10 Bayesian Ridge Regression program with pre-processing of kaggle titanic competition data
+File name: Bayesian_Ridge_Regression.py
 
 Version: 0.1
 Author: Andrej Marinchenko
@@ -9,7 +9,7 @@ Date: 2023-01-09
 
 import pandas as pd
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.linear_model import OrthogonalMatchingPursuitCV
+from sklearn.linear_model import BayesianRidge
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 
@@ -53,7 +53,7 @@ X_test = test_df[relevant_features]
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=33)
 
 ############################################## Train the model #########################################################
-model = OrthogonalMatchingPursuitCV()
+model = BayesianRidge()
 model.fit(X_train, y_train)
 
 # Evaluate the logistic regression classifier
@@ -66,10 +66,10 @@ y_pred = model.predict(X_test)
 # Save the predictions to a CSV file
 output = pd.DataFrame({'PassengerId': test_df['PassengerId'], 'Survived': y_pred})
 output['Survived'] = output['Survived'].astype(int)
-output.to_csv('08.submission-lasso-0.63636.csv', index=False)
+output.to_csv('09.submission-bayes-0.65071.csv', index=False)
 
 print(output)
 print('Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
-print('Real score on submission: 0.63636')
+print('Real score on submission: 0.65071')
 
 
