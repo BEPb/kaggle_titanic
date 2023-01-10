@@ -7,33 +7,33 @@
 
 </div>
 
-## Как это работает?
+## How it works?
 
-Все очень просто: здесь собраны решения по соревнованию [titanic](https://www.kaggle.com/competitions/titanic) 
+It's very simple: here are the solutions for the [titanic] competition (https://www.kaggle.com/competitions/titanic)
 
-## Порядок подготовки и работы
+## Order of preparation and work
 
-1. Клонировать репозиторий либо скачать архив из github или при помощи следующих команд в командной строке
-   ```commandline
-   $ cmd
-   $ git clone https://github.com/BEPb/kaggle_titanic
-   $ cd kaggle_titanic
-   ```
-
-2. Создать виртуальное окружение Python.
-3. Установить все необходимые пакеты для работы нашего кода, при помощи следующей команды:
-
+1. Clone the repository or download the archive from github or using the following commands on the command line
+    ```command line
+    $cmd
+    $ git clone https://github.com/BEPb/kaggle_titanic
+    $ cd kaggle_titanic
     ```
-    pip install -r requirements.txt
-    ```
-4. список файлов
-- data - директория с файлами данных
-- data/titanic.zip - архив исходных табличных данных соревнований (3 файла)
-- data/gender_submission.csv - один из исходных файлов данных
-- data/test.csv - один из исходных файлов данных
-- data/train.csv - один из исходных файлов данных
-- notebooks - директория с юпитер-ноутбуками
-- notebooks/eda_and_analysis - директория с ноутбуками еда и анализом данных
-- notebooks/eda_and_analysis/titanic_universal_eda.ipynb - универсальный еда ноутбук
-- notebooks/eda_and_analysis/titanic_eda.ipynb - еда ноутбук
-- notebooks/solutions - директория с ноутбуками решениями
+
+2. Create a Python virtual environment.
+3. Install all necessary packages for our code to work using the following command:
+
+     ```
+     pip install -r requirements.txt
+     ```
+4. file list
+- data - directory with data files
+- data/titanic.zip - archive of the initial tabular data of the competition (3 files)
+- data/gender_submission.csv - one of the original data files
+- data/test.csv - one of the original data files
+- data/train.csv - one of the original data files
+- notebooks - directory with jupiter notebooks
+- notebooks/eda_and_analysis - directory with notebooks food and data analysis
+- notebooks/eda_and_analysis/titanic_universal_eda.ipynb - universal food notebook
+- notebooks/eda_and_analysis/titanic_eda.ipynb - food notebook
+- notebooks/solutions - directory with notebook solutions
