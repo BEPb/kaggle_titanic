@@ -53,7 +53,12 @@ X_test = test_df[relevant_features]
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=33)
 
 ############################################## Train the model #########################################################
-model = SGDClassifier()
+# model = SGDClassifier()
+# model = SGDClassifier(loss="hinge", penalty="l2", max_iter=5)
+# model = SGDClassifier(loss="modified_huber", penalty="l2", max_iter=5)
+# model = SGDClassifier(loss="log_loss", penalty="l2", max_iter=5)
+model = SGDClassifier(loss="hinge", penalty="l1", max_iter=5)
+# model = SGDClassifier(loss="hinge", penalty="elasticnet", max_iter=5)
 model.fit(X_train, y_train)
 
 # Evaluate the logistic regression classifier
@@ -68,7 +73,7 @@ output = pd.DataFrame({'PassengerId': test_df['PassengerId'], 'Survived': y_pred
 # output['Survived'] = output['Survived'].astype(int)
 output.to_csv('11.submission-sgd-0.7177.csv', index=False)
 
-print(output)
+# print(output)
 print('Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
 result_df['percent'] = result_df['Survived'] == output['Survived']
 print('percent: \n', (result_df['percent'].value_counts('True')))
