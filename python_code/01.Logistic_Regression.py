@@ -87,9 +87,10 @@ output.to_csv('01.submission-lr-0.76555.csv', index=False)
 
 print('Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
 print('Real score on submission: 0.76555')
-# print(result_df['Survived'].value_counts())
-# result_df['percent'] = result_df['Survived'] == output['Survived']
+print(result_df['Survived'].value_counts())
+result_df['percent'] = result_df['Survived'] == output['Survived']
 # print('percent: \n', (result_df['percent'].value_counts()))
+print('percent: \n', (result_df['percent'].value_counts('True')))
 # print(result_df)
 # print(result_df['percent'].value_counts())
 # print(result_df['Survived'].isin(output['Survived']).value_counts())

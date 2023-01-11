@@ -70,4 +70,6 @@ output.to_csv('16.submission-hub-0.622.csv', index=False)
 
 print(output)
 print('Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
+result_df['percent'] = result_df['Survived'] == output['Survived']
+print('percent: \n', (result_df['percent'].value_counts('True')))
 print('Real score on submission: 0.622')
