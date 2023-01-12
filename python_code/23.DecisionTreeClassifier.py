@@ -8,7 +8,7 @@ Date: 2023-01-12
 """
 import pandas as pd
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 
@@ -72,4 +72,6 @@ print('Correlation with ideal submission:', output['Survived'].corr(result_df['S
 result_df['percent'] = result_df['Survived'] == output['Survived']
 print('percent: \n', (result_df['percent'].value_counts('True')))
 print('Real score on submission: 0.715311')
+
+
 
