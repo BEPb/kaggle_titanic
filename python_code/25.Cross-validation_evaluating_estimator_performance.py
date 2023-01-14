@@ -15,6 +15,14 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 
+#### plot
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import PrecisionRecallDisplay
+from sklearn.metrics import RocCurveDisplay
+from sklearn.metrics import roc_curve
+import matplotlib.pyplot as plt
+
+
 # Read in the training and test sets
 train_df = pd.read_csv('../data/train.csv')
 # print(len(train_df))
@@ -54,6 +62,7 @@ X_test = test_df[relevant_features]
 
 print('X_train before split: ', X_train.shape)
 print('y_train before split: ', y_train.shape)
+
 # Split the data into training and validation sets
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=30)  # random split into training and test sets
 print('\nX_train after split: ', X_train.shape)
@@ -65,6 +74,29 @@ print('y_valafter split: ', y_val.shape)
 # model = svm.SVC()
 model = make_pipeline(StandardScaler(), svm.SVC())
 model.fit(X_train, y_train)
+
+
+
+################################################### Plot ###############################################################
+# svc_disp = RocCurveDisplay.from_estimator(model, X_val, y_val)
+# plt.xlabel('X-val')
+# plt.ylabel('Y-val')
+# plt.title("A simple line graph")
+
+y_score = model.decision_function(X_val)
+fpr, tpr, _ = roc_curve(y_val, y_score, pos_label=model.classes_[1])
+roc_display = RocCurveDisplay(fpr=fpr, tpr=tpr)
+
+prec, recall, _ = precision_recall_curve(y_val, y_score, pos_label=model.classes_[1])
+pr_display = PrecisionRecallDisplay(precision=prec, recall=recall)
+# plt.title("Roc Curve")
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 8))
+roc_display.plot(ax=ax1)
+pr_display.plot(ax=ax2)
+plt.show()
+################################################## End plot ############################################################
+
 
 # Evaluate the logistic regression classifier
 scores = cross_val_score(model, X_val, y_val, cv=5)  # Computing cross-validated metrics
