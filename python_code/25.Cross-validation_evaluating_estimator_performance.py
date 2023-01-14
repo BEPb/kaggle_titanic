@@ -1,17 +1,19 @@
 """
-Python 3.10 Support Vector Machines program with pre-processing of kaggle titanic competition data
-File name: Support_Vector_Machines.py
+Python 3.10 Cross-validation: evaluating estimator performance with Support Vector Machines program with pre-processing
+ of kaggle titanic competition data
+File name: Cross-validation_evaluating_estimator_performance.py
 
 Version: 0.1
 Author: Andrej Marinchenko
-Date: 2023-01-11
+Date: 2023-01-14
 """
 
 import pandas as pd
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn import svm
+from sklearn.model_selection import train_test_split, cross_val_score, ShuffleSplit  # random split into training and test sets and Cross-validation
+from sklearn import svm  # Support Vector Machines
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
 
 # Read in the training and test sets
 train_df = pd.read_csv('../data/train.csv')
@@ -49,16 +51,25 @@ X_train = train_df[relevant_features]
 y_train = train_df['Survived']
 X_test = test_df[relevant_features]
 
-# Split the data into training and validation sets
-X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=33)
 
+print('X_train before split: ', X_train.shape)
+print('y_train before split: ', y_train.shape)
+# Split the data into training and validation sets
+X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=30)  # random split into training and test sets
+print('\nX_train after split: ', X_train.shape)
+print('X_valafter split:  ', X_val.shape)
+print('y_train after split: ', y_train.shape)
+print('y_valafter split: ', y_val.shape)
 ############################################## Train the model #########################################################
-model = svm.SVC()
+# model = svm.SVC(kernel='linear', C=1)
+# model = svm.SVC()
+model = make_pipeline(StandardScaler(), svm.SVC())
 model.fit(X_train, y_train)
 
 # Evaluate the logistic regression classifier
 scores = cross_val_score(model, X_val, y_val, cv=5)  # Computing cross-validated metrics
-print("%0.2f accuracy with a standard deviation of %0.2f" % (scores.mean(), scores.std()))
+print("\n %0.2f accuracy with a standard deviation of %0.2f" % (scores.mean(), scores.std()))
+print('\n ', cross_val_score(model, X_val, y_val, cv=5))
 
 # Make predictions on the test set
 y_pred = model.predict(X_test)
@@ -66,10 +77,10 @@ y_pred = model.predict(X_test)
 # Save the predictions to a CSV file
 output = pd.DataFrame({'PassengerId': test_df['PassengerId'], 'Survived': y_pred})
 output['Survived'] = output['Survived'].astype(int)
-output.to_csv('19.submission-svm-0.787081.csv', index=False)
+output.to_csv('25.submission-svm-0.782297.csv', index=False)
 
 # print(output)
-print('Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
+print('\n Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
 result_df['percent'] = result_df['Survived'] == output['Survived']
 print('percent: \n', (result_df['percent'].value_counts('True')))
-print('Real score on submission: 0.787081')
+print('Real score on submission: 0.782297')
