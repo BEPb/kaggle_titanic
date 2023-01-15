@@ -1,6 +1,6 @@
 """
 Python 3.10 Random Forest Classifier program with pre-processing of kaggle titanic competition data
-File name: Cross-validation_evaluating_estimator_performance.py
+File name: RandomForestClassifier.py
 
 Version: 0.1
 Author: Andrej Marinchenko
