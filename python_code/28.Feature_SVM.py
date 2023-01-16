@@ -14,9 +14,7 @@ sns.set(style="darkgrid")
 
 from sklearn import svm
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
-from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
-from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 import string
 import warnings
