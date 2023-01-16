@@ -37,3 +37,4 @@ It's very simple: here are the solutions for the [titanic] competition (https://
 - notebooks/eda_and_analysis/titanic_universal_eda.ipynb - universal food notebook
 - notebooks/eda_and_analysis/titanic_eda.ipynb - food notebook
 - notebooks/solutions - directory with notebook solutions
+- python_code - directory with python code solutions
