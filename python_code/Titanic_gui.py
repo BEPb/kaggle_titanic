@@ -65,18 +65,18 @@ from PIL import ImageTk, Image
 #
 #     # скачиваем файл
 #
-# # отдельно прописываем класс отображения информации в текстовом окне
-# class PrintLogger():  # create file like object
-#     def __init__(self, textbox):  # pass reference to text widget
-#         self.textbox = textbox  # keep ref
-#
-#     def write(self, text):
-#         self.textbox.insert(tk.END, text)  # write text to textbox
-#             # could also scroll to end of textbox here to make sure always visible
-#             # также можно прокрутить до конца текстового поля здесь, чтобы убедиться, что он всегда виден
-#
-#     def flush(self):  # needed for file like object
-#         pass
+# отдельно прописываем класс отображения информации в текстовом окне
+class PrintLogger():  # create file like object
+    def __init__(self, textbox):  # pass reference to text widget
+        self.textbox = textbox  # keep ref
+
+    def write(self, text):
+        self.textbox.insert(tk.END, text)  # write text to textbox
+            # could also scroll to end of textbox here to make sure always visible
+            # также можно прокрутить до конца текстового поля здесь, чтобы убедиться, что он всегда виден
+
+    def flush(self):  # needed for file like object
+        pass
 
 def selected(event):
     # получаем выделенный элемент
@@ -191,10 +191,10 @@ predict = Button(root, text="Predict", padx=30, bg="orange", relief=RIDGE, borde
 predict.place(x=150, y=620)
 
 # Окно для вывода результата скачивания
-# Output = Text(root, height = 22, width = 97)
-# Output.place(x=10, y=290)
-# pl = PrintLogger(Output)
-# sys.stdout = pl
+Output = Text(root, height = 22, width = 97)
+Output.place(x=400, y=290)
+pl = PrintLogger(Output)
+sys.stdout = pl
 
 
 root.mainloop()
