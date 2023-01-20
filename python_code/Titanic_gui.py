@@ -18,53 +18,7 @@ import tkinter.ttk as TTK
 from PIL import ImageTk, Image
 
 
-# # обработка региона, указан перед названием сайта порнохаб (определение ссылка принадлежит или нет порнохабу)
-# def ph_url_check():
-#     url = url_dl.get()
-#     parsed = urlparse.urlparse(url)
-#     regions = ["www", "cn", "cz", "de", "es", "fr", "it", "nl", "jp", "pt", "pl", "rt"]
-#     for region in regions:
-#         if parsed.netloc == region + ".pornhub.com":
-#             # print("PornHub url validated.")
-#             Output.insert(END, 'PornHub url validated.')
-#             return
-#
-#     # print("This is not a PornHub url.")
-#     Output.insert(END, 'This is not a PornHub url.')
-#     sys.exit()
-#
-# # проверка на существование данной страницы
-# def ph_alive_check():
-#     url = url_dl.get()
-#     requested = requests.get(url)
-#     if requested.status_code == 200:
-#         print("and the URL is existing.")
-#         # Output.insert(END, 'and the URL is existing')
-#     else:
-#         # print("but the URL does not exist.")
-#         Output.insert(END, 'but the URL does not exist.')
-#         sys.exit()
-#     # return url
-#
-# # скачивание видео - срабатывает по нажатию кнопки скачать
-# def Download_video():
-#     url = url_dl.get()  # получаем ссылку на скачивание введенную в окно ввода
-#     ph_url_check()  # проверка на принадлежность этой ссылки порнохабу
-#     ph_alive_check()  # проверка на существование данной ссылки
-#
-#     outtmpl = 'Download/' + '%(title)s.%(ext)s'  # указываем папку для скачивания
-#
-#     # прописываем параметры youtube_dl
-#     ydl_opts = {
-#         'format': 'best',  # качество на скачивание установить лучшее
-#         'outtmpl': outtmpl,
-#         'nooverwrites': True,
-#         'no_warnings': False,
-#         'ignoreerrors': True,
-#     }
-#
-#     # скачиваем файл
-#
+
 # отдельно прописываем класс отображения информации в текстовом окне
 class PrintLogger():  # create file like object
     def __init__(self, textbox):  # pass reference to text widget
@@ -78,11 +32,30 @@ class PrintLogger():  # create file like object
     def flush(self):  # needed for file like object
         pass
 
-def selected(event):
-    # получаем выделенный элемент
-    selection = combobox.get()
-    print(selection)
-    label["text"] = f"вы выбрали: {selection}"
+def get_text():
+    abr_t = combobox_abr.get()
+    name_t = Name.get()
+    surname_t = SurName.get()
+    pclass_t = combobox_tiket.get()
+    sex_t = combobox_sex.get()
+    age_t = Age_in_years.get()
+    sibsp_t = combobox_sibsp.get()
+    parch_t = combobox_parch.get()
+    tiket_num_t = Ticket_number.get()
+    fare_t = Passenger_fare.get()
+    cabin_t = Cabin_number.get()
+    embarked_t = combobox_embarked.get()
+    # label['text'] = name_t
+    print(abr_t, ' ', name_t, ' ', surname_t)
+    print(pclass_t)
+    print(sex_t)
+    print(age_t)
+    print(sibsp_t)
+    print(parch_t)
+    print(tiket_num_t)
+    print(fare_t)
+    print(cabin_t)
+    print(embarked_t)
 
 
 root = tk.Tk()
@@ -102,30 +75,39 @@ logo = Label(root, image=img, borderwidth=0)
 logo.place(x=600, y=38)
 
 # определяем начальное поле
+Abbreviations = ['Mr.', 'Mrs.', 'Ms.', 'Miss.', 'Dr.', 'Major', 'Capt', 'Sir', 'Don']
+a = Label(root, text="Abbr.", font=('verdana', 10, 'bold'))  # надпись над полем ввода
+a.place(x=40, y=120)
+combobox_abr = TTK.Combobox(values=Abbreviations)
+combobox_abr.place(x=40, y=145)
+
 Name = TTK.Entry()
 p = Label(root, text="Name", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 p.place(x=150, y=120)
 Name.place(x=150, y=145)
 
+SurName = TTK.Entry()
+p = Label(root, text="SurName", font=('verdana', 10, 'bold'))  # надпись над полем ввода
+p.place(x=150, y=120)
+SurName.place(x=350, y=145)
+
 # определяем первое поле
 Ticket_class = ['1st = Upper', '2nd = Middle', '3rd = Lower']
 q = Label(root, text="Ticket class", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 q.place(x=150, y=170)
-combobox = TTK.Combobox(values=Ticket_class)
-combobox.place(x=150, y=190)
-label = TTK.Label()
-label.place(x=250, y=170)
-combobox.bind("<<ComboboxSelected>>", selected)
+combobox_tiket = TTK.Combobox(values=Ticket_class)
+combobox_tiket.place(x=150, y=190)
+# label = TTK.Label()
+# label.place(x=250, y=170)
+# combobox_tiket.bind("<<ComboboxSelected>>", selected)
 
 # определяем второе поле
 Sex = ['male', 'female']
 w = Label(root, text="Sex", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 w.place(x=150, y=215)
-combobox = TTK.Combobox(values=Sex)
-combobox.place(x=150, y=235)
-label = TTK.Label()
-label.place(x=250, y=170)
-combobox.bind("<<ComboboxSelected>>", selected)
+combobox_sex = TTK.Combobox(values=Sex)
+combobox_sex.place(x=150, y=235)
+
 
 # определяем третье поле
 Age_in_years = TTK.Entry()
@@ -139,21 +121,15 @@ Age_in_years.place(x=150, y=285)
 spouses_aboard_the_Titanic = ['alone-0', '1', '2', '3', '4', '5', '6', '7', '8']
 r = Label(root, text="Number on board (brother, sister, stepbrother, stepsister, husband, wife)", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 r.place(x=150, y=310)
-combobox = TTK.Combobox(values=spouses_aboard_the_Titanic)
-combobox.place(x=150, y=335)
-label = TTK.Label()
-label.place(x=250, y=170)
-combobox.bind("<<ComboboxSelected>>", selected)
+combobox_sibsp = TTK.Combobox(values=spouses_aboard_the_Titanic)
+combobox_sibsp.place(x=150, y=335)
 
 # определяем пятое поле
 children_aboard_the_Titanic = ['alone-0', '1', '2', '3', '4', '5', '6']
 t = Label(root, text="Number on board (mother, father, daughter, son, stepdaughter, stepson)", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 t.place(x=150, y=360)
-combobox = TTK.Combobox(values=children_aboard_the_Titanic)
-combobox.place(x=150, y=385)
-label = TTK.Label()
-label.place(x=250, y=170)
-combobox.bind("<<ComboboxSelected>>", selected)
+combobox_parch = TTK.Combobox(values=children_aboard_the_Titanic)
+combobox_parch.place(x=150, y=385)
 
 # определяем шестое поле
 Ticket_number = TTK.Entry()
@@ -177,22 +153,21 @@ Cabin_number.place(x=150, y=535)
 Port_of_Embarkation = ['C = Cherbourg', 'Q = Queenstown', 'S = Southampton']
 o = Label(root, text="Port of Embarkation", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 o.place(x=150, y=560)
-combobox = TTK.Combobox(values=Port_of_Embarkation)
-combobox.place(x=150, y=585)
-label = TTK.Label()
-label.place(x=250, y=170)
-combobox.bind("<<ComboboxSelected>>", selected)
+combobox_embarked = TTK.Combobox(values=Port_of_Embarkation)
+combobox_embarked.place(x=150, y=585)
+
 
 
 # кнопка
 predict = Button(root, text="Predict", padx=30, bg="orange", relief=RIDGE, borderwidth=1,
                font=('verdana', 10, 'bold'),
-               cursor="hand2")
+               cursor="hand2",
+               command=get_text)
 predict.place(x=150, y=620)
 
 # Окно для вывода результата скачивания
-Output = Text(root, height = 22, width = 97)
-Output.place(x=400, y=290)
+Output = Text(root, height = 15, width = 37)
+Output.place(x=470, y=400)
 pl = PrintLogger(Output)
 sys.stdout = pl
 
