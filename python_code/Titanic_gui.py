@@ -18,7 +18,7 @@ import random
 import numpy as np
 
 import pandas as pd
-from sklearn.model_selection import train_test_split, cross_val_score  # random split into training and test sets and Cross-validation
+from sklearn.model_selection import train_test_split  # random split into training and test sets and Cross-validation
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
@@ -53,7 +53,7 @@ def get_text():
     cabin_let_t = combobox_cabin_letter.get()
     cabin_t = Cabin_number.get()
     embarked_t = combobox_embarked.get()
-    # label['text'] = name_t
+
     print(abr_t, ' ', name_t, ' ', surname_t)
     print(pclass_t)
     print(sex_t)
