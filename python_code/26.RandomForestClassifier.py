@@ -8,7 +8,7 @@ Date: 2023-01-15
 """
 
 import pandas as pd
-from sklearn.model_selection import train_test_split, cross_val_score, ShuffleSplit  # random split into training and test sets and Cross-validation
+from sklearn.model_selection import train_test_split, cross_val_score  # random split into training and test sets and Cross-validation
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler

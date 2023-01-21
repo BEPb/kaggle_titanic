@@ -8,15 +8,21 @@ Date: 2022-04-21
 """
 
 #  установка необходимых библиотек
-import requests
 import sys
-import urllib.parse as urlparse
 
 from tkinter import *
 import tkinter as tk
 import tkinter.ttk as TTK
 from PIL import ImageTk, Image
+import random
+import numpy as np
 
+import pandas as pd
+from sklearn.model_selection import train_test_split, cross_val_score  # random split into training and test sets and Cross-validation
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
 
 
 # отдельно прописываем класс отображения информации в текстовом окне
@@ -59,6 +65,74 @@ def get_text():
     print(cabin_let_t, '-', cabin_t)
     print(embarked_t)
 
+    # PassengerId, Pclass,      Name,          Sex,    Age,   SibSp,   Parch,     Ticket,  Fare, Cabin, Embarked
+    # 892,            3,  "Kelly, Mr. James",  male,   34.5,    0,       0,       330911,  7.8292,      ,   Q
+    # 918,            1,  "Ostby, Miss. Hel", female,  22,      0,       1,       113509,  61.9792, B36,    C
+
+    PassengerId_t = random.randint(1, 2224)
+    Pclass_t = pclass_t[0]
+    Name_t = name_t + ', ' + abr_t + ' ' + surname_t
+    Sex_t = sex_t
+    Age_t = float(age_t)
+    SibSp_t = sibsp_t[0]
+    Parch_t = parch_t[0]
+    Ticket_t = tiket_num_t
+    Fare_t = fare_t
+    Cabin_t = cabin_let_t + cabin_t
+    Embarked_t = embarked_t[0]
+
+    # Read in the training and test sets
+    train_df = pd.read_csv('../data/train.csv')
+    test_df = pd.DataFrame(np.array(
+        [[PassengerId_t, Pclass_t, Name_t, Sex_t, Age_t, SibSp_t, Parch_t, Ticket_t, Fare_t, Cabin_t, Embarked_t],
+         [PassengerId_t, Pclass_t, Name_t, Sex_t, Age_t, SibSp_t, Parch_t, Ticket_t, Fare_t, Cabin_t, Embarked_t]]),
+        columns=['PassengerId', 'Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin',
+                 'Embarked'])
+
+    ###################################### Preprocess the data #############################################################
+    # Identify most relevant features
+    # You can use techniques like feature importance or correlation analysis to help you identify the most important features
+    relevant_features = ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']
+
+    # Handle missing values
+    imputer = SimpleImputer(strategy='most_frequent')
+    train_df[relevant_features] = imputer.fit_transform(train_df[relevant_features])
+    test_df[relevant_features] = imputer.transform(test_df[relevant_features])
+
+    # Encode categorical variables as numeric
+    train_df['Sex'] = train_df['Sex'].map({'male': 0, 'female': 1})
+    test_df['Sex'] = test_df['Sex'].map({'male': 0, 'female': 1})
+    train_df['Embarked'] = train_df['Embarked'].map({'S': 0, 'C': 1, 'Q': 2})
+    test_df['Embarked'] = test_df['Embarked'].map({'S': 0, 'C': 1, 'Q': 2})
+
+    # Transform skewed or non-normal features
+    # Instead of normalizing all of the numeric features, you could try using techniques like log transformation or
+    # Box-Cox transformation to make the distribution of a feature more normal
+    scaler = StandardScaler()
+    train_df[relevant_features] = scaler.fit_transform(train_df[relevant_features])
+    test_df[relevant_features] = scaler.transform(test_df[relevant_features])
+
+    # Split the data into features (X) and labels (y)
+    X_train = train_df[relevant_features]
+    y_train = train_df['Survived']
+    X_test = test_df[relevant_features]
+
+    # Split the data into training and validation sets
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2,
+                                                      random_state=30)  # random split into training and test sets
+    ############################################## Train the model #########################################################
+    model = make_pipeline(StandardScaler(), RandomForestClassifier(n_estimators=100, max_depth=3, random_state=2))
+    model.fit(X_train, y_train)
+
+    # Make predictions on the test set
+    y_pred = model.predict(X_test)
+
+    if y_pred[0] == 0:
+        print('You will be Not Survived!!!')
+    else:
+        print('You will be Survived!!!')
+    # print(y_pred)
+    # print(X_test)
 
 root = tk.Tk()
 root.title('Titanic predictor')  # титул окна
@@ -120,14 +194,14 @@ Age_in_years.place(x=150, y=285)
 # определяем четвертое поле
 # brother, sister, stepbrother, stepsister
 # husband, wife
-spouses_aboard_the_Titanic = ['alone-0', '1', '2', '3', '4', '5', '6', '7', '8']
+spouses_aboard_the_Titanic = ['0-alone', '1', '2', '3', '4', '5', '6', '7', '8']
 r = Label(root, text="Number on board (brother, sister, stepbrother, stepsister, husband, wife)", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 r.place(x=50, y=310)
 combobox_sibsp = TTK.Combobox(values=spouses_aboard_the_Titanic, state="readonly")
 combobox_sibsp.place(x=150, y=335)
 
 # определяем пятое поле
-children_aboard_the_Titanic = ['alone-0', '1', '2', '3', '4', '5', '6']
+children_aboard_the_Titanic = ['0-alone', '1', '2', '3', '4', '5', '6']
 t = Label(root, text="Number on board (mother, father, daughter, son, stepdaughter, stepson)", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 t.place(x=50, y=360)
 combobox_parch = TTK.Combobox(values=children_aboard_the_Titanic, state="readonly")
