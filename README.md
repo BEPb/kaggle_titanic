@@ -40,6 +40,8 @@ It's very simple: here are the solutions for the [titanic] competition (https://
 - python_code - directory with python code solutions
 
 
-5. Well, as a result of the training, I wrote a console application that, based on the model, predicts whether the passenger whose data you enter in the fields will survive or not.
+5. Well, as a result of the training, I wrote a console application that, based on the model, predicts whether the 
+passenger whose data you enter in the fields will survive or not. 
+   - python_code/Titanic_gui.py
 
 <img src="./art/gui.png" alt="Bot logo" width="600" height="600">
