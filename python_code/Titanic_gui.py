@@ -1,10 +1,10 @@
 """
-Python 3.9 prediction program will you survive on the titanic or not
+Python 3.10 prediction program will you survive on the titanic or not
 File name Titanic_gui.py
 
 Version: 0.1
 Author: Andrej Marinchenko
-Date: 2022-04-19
+Date: 2022-04-21
 """
 
 #  установка необходимых библиотек
@@ -33,6 +33,7 @@ class PrintLogger():  # create file like object
         pass
 
 def get_text():
+    Output.delete(1.0, END)
     abr_t = combobox_abr.get()
     name_t = Name.get()
     surname_t = SurName.get()
@@ -43,6 +44,7 @@ def get_text():
     parch_t = combobox_parch.get()
     tiket_num_t = Ticket_number.get()
     fare_t = Passenger_fare.get()
+    cabin_let_t = combobox_cabin_letter.get()
     cabin_t = Cabin_number.get()
     embarked_t = combobox_embarked.get()
     # label['text'] = name_t
@@ -54,7 +56,7 @@ def get_text():
     print(parch_t)
     print(tiket_num_t)
     print(fare_t)
-    print(cabin_t)
+    print(cabin_let_t, '-', cabin_t)
     print(embarked_t)
 
 
@@ -75,11 +77,11 @@ logo = Label(root, image=img, borderwidth=0)
 logo.place(x=600, y=38)
 
 # определяем начальное поле
-Abbreviations = ['Mr.', 'Mrs.', 'Ms.', 'Miss.', 'Dr.', 'Major', 'Capt', 'Sir', 'Don']
+Abbreviations = ['Mr.', 'Mrs.', 'Ms.', 'Miss.', 'Dr.', 'Major', 'Capt', 'Sir', 'Don', 'Master']
 a = Label(root, text="Abbr.", font=('verdana', 10, 'bold'))  # надпись над полем ввода
-a.place(x=40, y=120)
-combobox_abr = TTK.Combobox(values=Abbreviations)
-combobox_abr.place(x=40, y=145)
+a.place(x=50, y=120)
+combobox_abr = TTK.Combobox(values=Abbreviations, height=9, width=7, state="readonly")
+combobox_abr.place(x=50, y=145)
 
 Name = TTK.Entry()
 p = Label(root, text="Name", font=('verdana', 10, 'bold'))  # надпись над полем ввода
@@ -88,14 +90,14 @@ Name.place(x=150, y=145)
 
 SurName = TTK.Entry()
 p = Label(root, text="SurName", font=('verdana', 10, 'bold'))  # надпись над полем ввода
-p.place(x=150, y=120)
+p.place(x=350, y=120)
 SurName.place(x=350, y=145)
 
 # определяем первое поле
 Ticket_class = ['1st = Upper', '2nd = Middle', '3rd = Lower']
 q = Label(root, text="Ticket class", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 q.place(x=150, y=170)
-combobox_tiket = TTK.Combobox(values=Ticket_class)
+combobox_tiket = TTK.Combobox(values=Ticket_class, state="readonly")
 combobox_tiket.place(x=150, y=190)
 # label = TTK.Label()
 # label.place(x=250, y=170)
@@ -105,7 +107,7 @@ combobox_tiket.place(x=150, y=190)
 Sex = ['male', 'female']
 w = Label(root, text="Sex", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 w.place(x=150, y=215)
-combobox_sex = TTK.Combobox(values=Sex)
+combobox_sex = TTK.Combobox(values=Sex, state="readonly")
 combobox_sex.place(x=150, y=235)
 
 
@@ -120,15 +122,15 @@ Age_in_years.place(x=150, y=285)
 # husband, wife
 spouses_aboard_the_Titanic = ['alone-0', '1', '2', '3', '4', '5', '6', '7', '8']
 r = Label(root, text="Number on board (brother, sister, stepbrother, stepsister, husband, wife)", font=('verdana', 10, 'bold'))  # надпись над полем ввода
-r.place(x=150, y=310)
-combobox_sibsp = TTK.Combobox(values=spouses_aboard_the_Titanic)
+r.place(x=50, y=310)
+combobox_sibsp = TTK.Combobox(values=spouses_aboard_the_Titanic, state="readonly")
 combobox_sibsp.place(x=150, y=335)
 
 # определяем пятое поле
 children_aboard_the_Titanic = ['alone-0', '1', '2', '3', '4', '5', '6']
 t = Label(root, text="Number on board (mother, father, daughter, son, stepdaughter, stepson)", font=('verdana', 10, 'bold'))  # надпись над полем ввода
-t.place(x=150, y=360)
-combobox_parch = TTK.Combobox(values=children_aboard_the_Titanic)
+t.place(x=50, y=360)
+combobox_parch = TTK.Combobox(values=children_aboard_the_Titanic, state="readonly")
 combobox_parch.place(x=150, y=385)
 
 # определяем шестое поле
@@ -144,16 +146,22 @@ u.place(x=150, y=460)
 Passenger_fare.place(x=150, y=485)
 
 # определяем восьмое поле
+i = Label(root, text="Cabin letter", font=('verdana', 10, 'bold'))  # надпись над полем ввода
+i.place(x=50, y=510)
+Cabin_letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'T','without']
+combobox_cabin_letter = TTK.Combobox(values=Cabin_letter, height=9, width=7, state="readonly")
+combobox_cabin_letter.place(x=50, y=535)
 Cabin_number = TTK.Entry()
-i = Label(root, text="Cabin number", font=('verdana', 10, 'bold'))  # надпись над полем ввода
+i = Label(root, text="Cabin number 1-150", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 i.place(x=150, y=510)
 Cabin_number.place(x=150, y=535)
+
 
 # определяем девятое поле
 Port_of_Embarkation = ['C = Cherbourg', 'Q = Queenstown', 'S = Southampton']
 o = Label(root, text="Port of Embarkation", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 o.place(x=150, y=560)
-combobox_embarked = TTK.Combobox(values=Port_of_Embarkation)
+combobox_embarked = TTK.Combobox(values=Port_of_Embarkation, state="readonly")
 combobox_embarked.place(x=150, y=585)
 
 
