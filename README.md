@@ -9,7 +9,7 @@
 
 ## How it works?
 
-It's very simple: here are the solutions for the [titanic] competition (https://www.kaggle.com/competitions/titanic)
+It's very simple: here are the solutions for the [titanic competition ](https://www.kaggle.com/competitions/titanic)
 
 ## Order of preparation and work
 
