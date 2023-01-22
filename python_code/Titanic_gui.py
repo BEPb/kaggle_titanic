@@ -4,19 +4,17 @@ File name Titanic_gui.py
 
 Version: 0.1
 Author: Andrej Marinchenko
-Date: 2022-04-21
+Date: 2022-01-22
 """
 
-#  установка необходимых библиотек
-import sys
 
+import sys
 from tkinter import *
 import tkinter as tk
 import tkinter.ttk as TTK
 from PIL import ImageTk, Image
 import random
 import numpy as np
-
 import pandas as pd
 from sklearn.model_selection import train_test_split  # random split into training and test sets and Cross-validation
 from sklearn.ensemble import RandomForestClassifier
@@ -25,7 +23,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 
 
-# отдельно прописываем класс отображения информации в текстовом окне
+# separately prescribe the class for displaying information in a text window
 class PrintLogger():  # create file like object
     def __init__(self, textbox):  # pass reference to text widget
         self.textbox = textbox  # keep ref
@@ -33,11 +31,11 @@ class PrintLogger():  # create file like object
     def write(self, text):
         self.textbox.insert(tk.END, text)  # write text to textbox
             # could also scroll to end of textbox here to make sure always visible
-            # также можно прокрутить до конца текстового поля здесь, чтобы убедиться, что он всегда виден
 
     def flush(self):  # needed for file like object
         pass
 
+# fuction predict
 def get_text():
     Output.delete(1.0, END)
     abr_t = combobox_abr.get()
@@ -89,7 +87,7 @@ def get_text():
         columns=['PassengerId', 'Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin',
                  'Embarked'])
 
-    ###################################### Preprocess the data #############################################################
+    ###################################### Preprocess the data ########################################################
     # Identify most relevant features
     # You can use techniques like feature importance or correlation analysis to help you identify the most important features
     relevant_features = ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']
@@ -120,7 +118,7 @@ def get_text():
     # Split the data into training and validation sets
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2,
                                                       random_state=30)  # random split into training and test sets
-    ############################################## Train the model #########################################################
+    ############################################## Train the model ####################################################
     model = make_pipeline(StandardScaler(), RandomForestClassifier(n_estimators=100, max_depth=3, random_state=2))
     model.fit(X_train, y_train)
 
@@ -131,67 +129,62 @@ def get_text():
         print('You will be Not Survived!!!')
     else:
         print('You will be Survived!!!')
-    # print(y_pred)
-    # print(X_test)
+    ###################################################################################################################
 
 root = tk.Tk()
-root.title('Titanic predictor')  # титул окна
-root.geometry('800x700')  # размер окна
+root.title('Titanic predictor')
+root.geometry('800x700')
 root.maxsize(800, 700)
 root.minsize(800, 700)
 
 header = Label(root, bg="orange", width=300, height=2)
 header.place(x=0, y=0)
 
-h1 = Label(root, text="Titanic predictor", bg="orange", fg="black", font=('verdana', 13, 'bold'))  # подпись окна вверху
+h1 = Label(root, text="Titanic predictor", bg="orange", fg="black", font=('verdana', 13, 'bold'))
 h1.place(x=135, y=5)
 
-img = ImageTk.PhotoImage(Image.open('../art/titanic.png'))  # вставляем картинку logo
+img = ImageTk.PhotoImage(Image.open('../art/titanic.png'))  # add logo img
 logo = Label(root, image=img, borderwidth=0)
 logo.place(x=600, y=38)
 
-# определяем начальное поле
+####################################### define the initial field ######################################################
 Abbreviations = ['Mr.', 'Mrs.', 'Ms.', 'Miss.', 'Dr.', 'Major', 'Capt', 'Sir', 'Don', 'Master']
-a = Label(root, text="Abbr.", font=('verdana', 10, 'bold'))  # надпись над полем ввода
+a = Label(root, text="Abbr.", font=('verdana', 10, 'bold'))
 a.place(x=50, y=120)
 combobox_abr = TTK.Combobox(values=Abbreviations, height=9, width=7, state="readonly")
 combobox_abr.place(x=50, y=145)
 
 Name = TTK.Entry()
-p = Label(root, text="Name", font=('verdana', 10, 'bold'))  # надпись над полем ввода
+p = Label(root, text="Name", font=('verdana', 10, 'bold'))
 p.place(x=150, y=120)
 Name.place(x=150, y=145)
 
 SurName = TTK.Entry()
-p = Label(root, text="SurName", font=('verdana', 10, 'bold'))  # надпись над полем ввода
+p = Label(root, text="SurName", font=('verdana', 10, 'bold'))
 p.place(x=350, y=120)
 SurName.place(x=350, y=145)
 
-# определяем первое поле
+# define the 1st field
 Ticket_class = ['1st = Upper', '2nd = Middle', '3rd = Lower']
-q = Label(root, text="Ticket class", font=('verdana', 10, 'bold'))  # надпись над полем ввода
+q = Label(root, text="Ticket class", font=('verdana', 10, 'bold'))
 q.place(x=150, y=170)
 combobox_tiket = TTK.Combobox(values=Ticket_class, state="readonly")
 combobox_tiket.place(x=150, y=190)
-# label = TTK.Label()
-# label.place(x=250, y=170)
-# combobox_tiket.bind("<<ComboboxSelected>>", selected)
 
-# определяем второе поле
+# define the 2st field
 Sex = ['male', 'female']
-w = Label(root, text="Sex", font=('verdana', 10, 'bold'))  # надпись над полем ввода
+w = Label(root, text="Sex", font=('verdana', 10, 'bold'))
 w.place(x=150, y=215)
 combobox_sex = TTK.Combobox(values=Sex, state="readonly")
 combobox_sex.place(x=150, y=235)
 
-
-# определяем третье поле
+# define the 3 field
 Age_in_years = TTK.Entry()
 e = Label(root, text="Age in years", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 e.place(x=150, y=260)
 Age_in_years.place(x=150, y=285)
 
-# определяем четвертое поле
+# define the 4 field
 # brother, sister, stepbrother, stepsister
 # husband, wife
 spouses_aboard_the_Titanic = ['0-alone', '1', '2', '3', '4', '5', '6', '7', '8']
@@ -200,26 +193,26 @@ r.place(x=50, y=310)
 combobox_sibsp = TTK.Combobox(values=spouses_aboard_the_Titanic, state="readonly")
 combobox_sibsp.place(x=150, y=335)
 
-# определяем пятое поле
+# define the 5 field
 children_aboard_the_Titanic = ['0-alone', '1', '2', '3', '4', '5', '6']
 t = Label(root, text="Number on board (mother, father, daughter, son, stepdaughter, stepson)", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 t.place(x=50, y=360)
 combobox_parch = TTK.Combobox(values=children_aboard_the_Titanic, state="readonly")
 combobox_parch.place(x=150, y=385)
 
-# определяем шестое поле
+# define the 6 field
 Ticket_number = TTK.Entry()
 y = Label(root, text="Ticket number", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 y.place(x=150, y=410)
 Ticket_number.place(x=150, y=435)
 
-# определяем седьмое поле
+# define the 7 field
 Passenger_fare = TTK.Entry()
 u = Label(root, text="Passenger fare", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 u.place(x=150, y=460)
 Passenger_fare.place(x=150, y=485)
 
-# определяем восьмое поле
+# define the 8 field
 i = Label(root, text="Cabin letter", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 i.place(x=50, y=510)
 Cabin_letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'T','without']
@@ -230,31 +223,28 @@ i = Label(root, text="Cabin number 1-150", font=('verdana', 10, 'bold'))  # на
 i.place(x=150, y=510)
 Cabin_number.place(x=150, y=535)
 
-
-# определяем девятое поле
+# define the 9 field
 Port_of_Embarkation = ['C = Cherbourg', 'Q = Queenstown', 'S = Southampton']
 o = Label(root, text="Port of Embarkation", font=('verdana', 10, 'bold'))  # надпись над полем ввода
 o.place(x=150, y=560)
 combobox_embarked = TTK.Combobox(values=Port_of_Embarkation, state="readonly")
 combobox_embarked.place(x=150, y=585)
 
-
-
-# кнопка
+# button
 predict = Button(root, text="Predict", padx=30, bg="orange", relief=RIDGE, borderwidth=1,
                font=('verdana', 10, 'bold'),
                cursor="hand2",
                command=get_text)
 predict.place(x=150, y=620)
 
-# Окно для вывода результата скачивания
+# text window
 Output = Text(root, height = 15, width = 37)
 Output.place(x=470, y=400)
 pl = PrintLogger(Output)
 sys.stdout = pl
 
-
 root.mainloop()
+
 
 # survival	Survival	0 = No, 1 = Yes
 # pclass	Ticket class	1 = 1st, 2 = 2nd, 3 = 3rd
