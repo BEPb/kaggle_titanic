@@ -45,7 +45,7 @@ passenger whose data you enter in the fields will survive or not.
    - python_code/Titanic_gui.py
 
 prediction for my data, let's say I'm traveling first class with my family:
-<img src="./art/gui.png" alt="Bot logo" width="600" height="600">
+<img src="./art/gui.png" alt="Gui logo" width="600" height="600">
 
 prediction for data from a set:
-<img src="./art/gui2.png" alt="Bot logo" width="600" height="600">
+<img src="./art/gui2.png" alt="Gui logo" width="600" height="600">
