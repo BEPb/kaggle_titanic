@@ -44,4 +44,8 @@ It's very simple: here are the solutions for the [titanic] competition (https://
 passenger whose data you enter in the fields will survive or not. 
    - python_code/Titanic_gui.py
 
+prediction for my data, let's say I'm traveling first class with my family:
 <img src="./art/gui.png" alt="Bot logo" width="600" height="600">
+
+prediction for data from a set:
+<img src="./art/gui2.png" alt="Bot logo" width="600" height="600">
