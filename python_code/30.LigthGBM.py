@@ -1,23 +1,25 @@
 """
-Python 3.10 Neural Network program with pre-processing of kaggle titanic competition data
-File name: Neural_Network.py
+Python 3.10 Advanced Feature Engineering with LigthGBM program with pre-processing of kaggle titanic competition data
+File name: 30.LigthGBM.py
 
 Version: 0.1
 Author: Andrej Marinchenko
-Date: 2023-01-25
+Date: 2023-01-18
 """
 
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+import numpy as np
+import pandas as pd
+import seaborn as sns
+sns.set(style="darkgrid")
+
+import lightgbm as lgb
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
+from sklearn.metrics import roc_curve, auc
+from sklearn.model_selection import StratifiedKFold
+
 import string
 import warnings
 warnings.filterwarnings('ignore')
-import pandas as pd
-import numpy as np
-from tensorflow import keras
-from keras import layers, callbacks
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 
 SEED = 42
 
@@ -327,89 +329,84 @@ drop_cols = ['Deck', 'Embarked', 'Family', 'Family_Size', 'Family_Size_Grouped',
 df_all.drop(columns=drop_cols, inplace=True)
 
 ################################################# Model ################################################################
-# Transform skewed or non-normal features
-# Instead of normalizing all of the numeric features, you could try using techniques like log transformation or
-# Box-Cox transformation to make the distribution of a feature more normal
-scaler = StandardScaler()
-train_df[relevant_features] = scaler.fit_transform(train_df[relevant_features])
-test_df[relevant_features] = scaler.transform(test_df[relevant_features])
+X_train = StandardScaler().fit_transform(df_train.drop(columns=drop_cols))
+y_train = df_train['Survived'].values
+X_test = StandardScaler().fit_transform(df_test.drop(columns=drop_cols))
 
-# Split the data into features (X) and labels (y)
-X_train = train_df[relevant_features]
-y_train = train_df['Survived']
-X_test = test_df[relevant_features]
-
-# Split the data into training and validation sets
-X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=33)
+print('X_train shape: {}'.format(X_train.shape))
+print('y_train shape: {}'.format(y_train.shape))
+print('X_test shape: {}'.format(X_test.shape))
 
 
+leaderboard_model =  lgb.LGBMClassifier()
 
-# earlystop = callbacks.EarlyStopping(
-#      min_delta=0.001,
-#      patience=10,
-#      restore_best_weights=True,
-# )
-#
-# model = keras.Sequential([
-#         layers.Dense(256, activation = 'relu'),
-#         layers.Dropout(0.2),
-#         layers.Dense(256, activation='relu'),
-#         layers.Dropout(0.2),
-#         layers.Dense(1, activation='sigmoid'),
-# ])
-# model.compile(
-#     optimizer='adam',
-#     loss='binary_crossentropy',
-#     metrics=['binary_accuracy']
-# )
-#
-# fit = model.fit(
-#         X_train,y_train,
-#         validation_data=(X_val, y_val),
-#         callbacks=[earlystop],
-#         batch_size=64,
-#         epochs=512,
-#         verbose=0
-# )
+params = {
+    "n_estimators": [3, 5, 10, 50, 100, 200], # total tree number
+    "learning_rate": [0.01, 0.05, 0.1, 0.3], # learning rate
+    "max_depth": [1, 3, 5, 10, 15], # max depth of each tree
+    "subsample": [0.6, 0.8, 1] # subsample rate of data
+}
 
-# history_df = pd.DataFrame(fit.history)
-# history_df.loc[:, ['loss', 'val_loss']].plot()
-# plt.show()
-#
-# valid_score = model.predict(X_val)  # using model on validation dataset
-# vs = valid_score.round(0)
-# val_sco = pd.DataFrame(vs)
-# print(val_sco)  # predictions using cross validation dataset
-# print(accuracy_score(y_val, val_sco))
+from sklearn.model_selection import GridSearchCV
+model_rs = GridSearchCV(leaderboard_model, params, n_jobs=-1, cv=5)
 
+N = 5
+oob = 0
+probs = pd.DataFrame(np.zeros((len(X_test), N * 2)),
+                     columns=['Fold_{}_Prob_{}'.format(i, j) for i in range(1, N + 1) for j in range(2)])
+importances = pd.DataFrame(np.zeros((X_train.shape[1], N)), columns=['Fold_{}'.format(i) for i in range(1, N + 1)],
+                           index=df_all.columns)
+fprs, tprs, scores = [], [], []
 
+skf = StratifiedKFold(n_splits=N, random_state=N, shuffle=True)
 
-# Initialising the NN
-model = keras.Sequential()
+for fold, (trn_idx, val_idx) in enumerate(skf.split(X_train, y_train), 1):
+    print('Fold {}\n'.format(fold))
 
-# layers
-model.add(layers.Dense(units = 9, kernel_initializer = 'uniform', activation = 'relu', input_dim = 17))
-model.add(layers.Dense(units = 9, kernel_initializer = 'uniform', activation = 'relu'))
-model.add(layers.Dense(units = 5, kernel_initializer = 'uniform', activation = 'relu'))
-model.add(layers.Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
+    # Fitting the model
+    leaderboard_model.fit(X_train[trn_idx], y_train[trn_idx])
 
-# Compiling the ANN
-model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+    # Computing Train AUC score
+    trn_fpr, trn_tpr, trn_thresholds = roc_curve(y_train[trn_idx],
+                                                 leaderboard_model.predict_proba(X_train[trn_idx])[:, 1])
+    trn_auc_score = auc(trn_fpr, trn_tpr)
+    # Computing Validation AUC score
+    val_fpr, val_tpr, val_thresholds = roc_curve(y_train[val_idx],
+                                                 leaderboard_model.predict_proba(X_train[val_idx])[:, 1])
+    val_auc_score = auc(val_fpr, val_tpr)
 
-# Train the ANN
-model.fit(X_train, y_train, batch_size = 32, epochs = 200)
+    scores.append((trn_auc_score, val_auc_score))
+    fprs.append(val_fpr)
+    tprs.append(val_tpr)
 
+    # X_test probabilities
+    probs.loc[:, 'Fold_{}_Prob_0'.format(fold)] = leaderboard_model.predict_proba(X_test)[:, 0]
+    probs.loc[:, 'Fold_{}_Prob_1'.format(fold)] = leaderboard_model.predict_proba(X_test)[:, 1]
+    importances.iloc[:, fold - 1] = leaderboard_model.feature_importances_
 
-# Make predictions on the test set
-y_pred = model.predict(X_test)
+    # oob += leaderboard_model.oob_score_ / N
+    # print('Fold {} OOB Score: {}\n'.format(fold, leaderboard_model.oob_score_))
 
-# Save the predictions to a CSV file
-output = pd.DataFrame({'PassengerId': test_df['PassengerId'], 'Survived': y_pred})
-output['Survived'] = output['Survived'].astype(int)
-output.to_csv('30.submission-svm-0.0.csv', index=False)
+print('Average OOB Score: {}'.format(oob))
 
-# print(output)
-print('Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
+################################################
+class_survived = [col for col in probs.columns if col.endswith('Prob_1')]
+probs['1'] = probs[class_survived].sum(axis=1) / N
+probs['0'] = probs.drop(columns=class_survived).sum(axis=1) / N
+probs['pred'] = 0
+pos = probs[probs['1'] >= 0.5].index
+probs.loc[pos, 'pred'] = 1
+
+y_pred = probs['pred'].astype(int)
+
+submission_df = pd.DataFrame(columns=['PassengerId', 'Survived'])
+submission_df['PassengerId'] = df_test['PassengerId']
+submission_df['Survived'] = y_pred.values
+submission_df.to_csv('30.submissions-0.760766.csv', header=True, index=False)
+
+output = pd.read_csv('30.submissions-0.760766.csv')
+print('\n Correlation with ideal submission:', output['Survived'].corr(result_df['Survived']))
 result_df['percent'] = result_df['Survived'] == output['Survived']
 print('percent: \n', (result_df['percent'].value_counts('True')))
-print('Real score on submission: 0.0')
+print('Real score on submission: 0.760766')
+
